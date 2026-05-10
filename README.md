@@ -51,13 +51,3 @@ src/main/java/com/lemontree/applicationtracker
 +-- service
 +-- ui
 ```
-
-## Uebungs-TODOs
-
-Im Code findest du mehrere `TODO Uebung`-Kommentare. Sinnvolle erste Aufgaben:
-
-- Validierung ergaenzen: Deadline darf nicht vor dem Bewerbungsdatum liegen.
-- Formular zuruecksetzen: Button in der UI einbauen.
-- Bestehende Bewerbung bearbeiten: `update` im Repository implementieren.
-- Bewerbung loeschen: `deleteById` im Repository und Button in der UI.
-- Tabelle interaktiv machen: Doppelklick laedt einen Eintrag ins Formular.
