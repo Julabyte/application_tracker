@@ -27,7 +27,7 @@ public final class ApplicationTrackerApp extends Application {
         database.initialize();
 
         // Schichten der App:
-        // Repository = Datenbankzugriff, Service = Fachlogik, View = Oberflaeche.
+        // Repository = Datenbankzugriff, Service = Fachlogik, View = Oberfläche.
         JobApplicationRepository repository = new JobApplicationRepository(database);
         ApplicationService service = new ApplicationService(repository);
 

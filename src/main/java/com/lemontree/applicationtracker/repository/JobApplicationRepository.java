@@ -44,7 +44,7 @@ public final class JobApplicationRepository {
     }
 
     public JobApplication save(JobApplication application) {
-        // Fragezeichen sind Platzhalter. PreparedStatement setzt die Werte spaeter sicher ein.
+        // Fragezeichen sind Platzhalter. PreparedStatement setzt die Werte später sicher ein.
         String sql = """
                 INSERT INTO job_applications (
                     company, position, contact_name, link, applied_on, next_deadline, status, notes
@@ -64,7 +64,7 @@ public final class JobApplicationRepository {
             statement.setString(8, blankToNull(application.notes()));
             statement.executeUpdate();
 
-            // SQLite erzeugt die ID automatisch. Hier lesen wir sie aus und geben ein vollstaendiges Objekt zurueck.
+            // SQLite erzeugt die ID automatisch. Hier lesen wir sie aus und geben ein vollständiges Objekt zurueck.
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 if (keys.next()) {
                     return new JobApplication(
@@ -135,7 +135,7 @@ public final class JobApplicationRepository {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new IllegalStateException("Bewerbung konnte nicht geloescht werden.", ex);
+            throw new IllegalStateException("Bewerbung konnte nicht gelöscht werden.", ex);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.lemontree.applicationtracker.model;
 
 // Ein enum ist eine feste Auswahl von erlaubten Werten.
-// Dadurch kann der Status spaeter nicht versehentlich "irgendein String" sein.
+// Dadurch kann der Status später nicht versehentlich "irgendein String" sein.
 public enum ApplicationStatus {
     DRAFT("Entwurf"),
     SENT("Beworben"),
@@ -13,7 +13,7 @@ public enum ApplicationStatus {
     private final String label;
 
     ApplicationStatus(String label) {
-        // Das Label ist der Text, den wir in der Oberflaeche anzeigen.
+        // Das Label ist der Text, den wir in der Oberfläche anzeigen.
         this.label = label;
     }
 

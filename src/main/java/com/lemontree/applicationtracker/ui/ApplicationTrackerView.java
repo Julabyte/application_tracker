@@ -28,7 +28,7 @@ import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
 
-// Diese Klasse baut die komplette sichtbare Oberflaeche.
+// Diese Klasse baut die komplette sichtbare Oberfläche.
 // Sie erbt von BorderPane, einem Layout mit Bereichen: oben, links, mitte, rechts, unten.
 public final class ApplicationTrackerView extends BorderPane {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -36,7 +36,7 @@ public final class ApplicationTrackerView extends BorderPane {
 
     private final ApplicationService service;
 
-    // ObservableList informiert die TableView automatisch, wenn sich der Inhalt aendert.
+    // ObservableList informiert die TableView automatisch, wenn sich der Inhalt ändert.
     private final ObservableList<JobApplication> applications = FXCollections.observableArrayList();
 
     // Diese Felder sind UI-Komponenten, aus denen wir beim Speichern die Eingaben lesen.
@@ -158,7 +158,7 @@ public final class ApplicationTrackerView extends BorderPane {
         linkField.setPromptText("Stellenanzeige oder Karriereseite");
         statusBox.setItems(FXCollections.observableArrayList(ApplicationStatus.values()));
         statusBox.setValue(ApplicationStatus.DRAFT);
-        notesArea.setPromptText("Notizen zum Stand, Fragen, naechste Schritte ...");
+        notesArea.setPromptText("Notizen zum Stand, Fragen, nächste Schritte ...");
         notesArea.setPrefRowCount(5);
 
         // GridPane eignet sich fuer Formular-Layouts: Label links, Eingabefeld rechts.
@@ -192,7 +192,7 @@ public final class ApplicationTrackerView extends BorderPane {
         clearFormButton.getStyleClass().add("secondary-button");
         clearFormButton.setOnAction(event -> clearForm());
 
-        deleteButton = new Button("Bewerbung loeschen");
+        deleteButton = new Button("Bewerbung löschen");
         deleteButton.setMaxWidth(Double.MAX_VALUE);
         deleteButton.getStyleClass().add("danger-button");
         deleteButton.setOnAction(event -> deleteEditedApplication());
@@ -229,7 +229,7 @@ public final class ApplicationTrackerView extends BorderPane {
                     notesArea.getText()
             );
 
-            // Speichern laeuft durch den Service. Danach wird das Formular geleert und die Tabelle neu geladen.
+            // Speichern läuft durch den Service. Danach wird das Formular geleert und die Tabelle neu geladen.
             if (editedApplication == null) {
                 service.addApplication(application);
             } else {
@@ -309,13 +309,13 @@ public final class ApplicationTrackerView extends BorderPane {
 
     private void deleteEditedApplication() {
         if (editedApplication == null) {
-            showError("Keine Bewerbung", "Es ist keine bestehende Bewerbung zum Loeschen geoeffnet.");
+            showError("Keine Bewerbung", "Es ist keine bestehende Bewerbung zum Löschen geöffnet.");
             return;
         }
 
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Bewerbung loeschen");
-        confirmation.setHeaderText("Bewerbung loeschen?");
+        confirmation.setTitle("Bewerbung löschen");
+        confirmation.setHeaderText("Bewerbung löschen?");
         confirmation.setContentText(editedApplication.company() + " - " + editedApplication.position());
 
         if (confirmation.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {

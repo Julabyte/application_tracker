@@ -29,7 +29,7 @@ public record JobApplication(
         }
     }
 
-    // Hilfsmethode fuer neue Eintraege: id = 0 bedeutet "noch nicht in der Datenbank gespeichert".
+    // Hilfsmethode fuer neue Einträge: id = 0 bedeutet "noch nicht in der Datenbank gespeichert".
     // Die echte ID erzeugt SQLite beim Speichern automatisch.
     public static JobApplication newEntry(
             String company,

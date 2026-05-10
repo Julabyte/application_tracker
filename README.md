@@ -1,13 +1,13 @@
 # Bewerbungs-Tracker
 
-Eine lokale Java-Desktop-App zum Ueben von Java, JavaFX, SQLite und sauberer Projektstruktur.
+Eine lokale Java-Desktop-App zum Üben von Java, JavaFX, SQLite und sauberer Projektstruktur.
 
 ## Stack
 
 - Java 21
-- JavaFX fuer die Oberflaeche
+- JavaFX für die Oberfläche
 - SQLite als lokale Datenbank
-- Maven fuer Build und Abhaengigkeiten
+- Maven für Build und Abhängigkeiten
 
 ## Starten
 
@@ -33,13 +33,13 @@ Das Script nutzt Maven und `jpackage` aus deinem JDK. Wenn ein Installer gebaut 
 target\installer
 ```
 
-Falls Windows fuer den Installer das WiX Toolset erwartet und es nicht installiert ist, erzeugt das Script stattdessen eine portable App unter:
+Falls Windows für den Installer das WiX Toolset erwartet und es nicht installiert ist, erzeugt das Script stattdessen eine portable App unter:
 
 ```text
 target\app-image
 ```
 
-Fuer einen echten `.exe`-Installer brauchst du unter Windows zusaetzlich das WiX Toolset. Ohne WiX erzeugt das Script automatisch die portable Variante.
+Für einen echten `.exe`-Installer brauchst du unter Windows zusätzlich das WiX Toolset. Ohne WiX erzeugt das Script automatisch die portable Variante.
 
 ## Struktur
 

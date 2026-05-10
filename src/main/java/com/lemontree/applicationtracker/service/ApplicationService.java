@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 // Die Service-Schicht ist der Platz fuer Fachlogik.
-// Aktuell leitet sie viel nur ans Repository weiter, spaeter kommen hier Regeln hinein.
+// Aktuell leitet sie viel nur ans Repository weiter, später kommen hier Regeln hinein.
 public final class ApplicationService {
     private final JobApplicationRepository repository;
 

@@ -29,7 +29,7 @@ public final class Database {
             try (Connection connection = openConnection();
                  Statement statement = connection.createStatement()) {
                 // CREATE TABLE IF NOT EXISTS ist sicher mehrfach ausfuehrbar:
-                // Beim ersten Start wird die Tabelle erzeugt, danach bleibt sie unveraendert.
+                // Beim ersten Start wird die Tabelle erzeugt, danach bleibt sie unverändert.
                 statement.executeUpdate("""
                         CREATE TABLE IF NOT EXISTS job_applications (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
