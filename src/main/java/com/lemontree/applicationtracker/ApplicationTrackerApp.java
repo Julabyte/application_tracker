@@ -23,7 +23,7 @@ public final class ApplicationTrackerApp extends Application {
     public void start(Stage stage) {
         // Die Datenbank wird als Datei im Projektordner gespeichert.
         // So bleibt die App lokal und braucht keinen Server.
-        Database database = new Database(Path.of("data", "application-tracker.db"));
+        Database database = new Database(resolveDatabasePath());
         database.initialize();
 
         // Schichten der App:
@@ -98,5 +98,14 @@ public final class ApplicationTrackerApp extends Application {
         // Windows/JavaFX aktualisiert nach DPI-Wechseln manchmal erst nach einem echten Resize korrekt.
         stage.setWidth(width + 1);
         stage.setWidth(width);
+    }
+
+    private static Path resolveDatabasePath() {
+        String localAppData = System.getenv("LOCALAPPDATA");
+        if (localAppData != null && !localAppData.isBlank()) {
+            return Path.of(localAppData, "BewerbungsTracker", "application-tracker.db");
+        }
+
+        return Path.of(System.getProperty("user.home"), ".bewerbungs-tracker", "application-tracker.db");
     }
 }

@@ -15,7 +15,31 @@ Eine lokale Java-Desktop-App zum Ueben von Java, JavaFX, SQLite und sauberer Pro
 mvn javafx:run
 ```
 
-Beim ersten Start wird die lokale Datenbank unter `data\application-tracker.db` angelegt.
+Beim ersten Start wird die lokale Datenbank im Benutzerprofil angelegt, unter Windows z.B.:
+
+```text
+%LOCALAPPDATA%\BewerbungsTracker\application-tracker.db
+```
+
+## Windows-EXE bauen
+
+```powershell
+.\scripts\package-windows.ps1
+```
+
+Das Script nutzt Maven und `jpackage` aus deinem JDK. Wenn ein Installer gebaut werden kann, findest du ihn unter:
+
+```text
+target\installer
+```
+
+Falls Windows fuer den Installer das WiX Toolset erwartet und es nicht installiert ist, erzeugt das Script stattdessen eine portable App unter:
+
+```text
+target\app-image
+```
+
+Fuer einen echten `.exe`-Installer brauchst du unter Windows zusaetzlich das WiX Toolset. Ohne WiX erzeugt das Script automatisch die portable Variante.
 
 ## Struktur
 
