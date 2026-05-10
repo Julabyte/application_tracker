@@ -8,8 +8,8 @@ $artifactName = "application-tracker-0.1.0-SNAPSHOT.jar"
 
 $target = Join-Path $root "target"
 $inputDir = Join-Path $target "package-input"
-$installerDir = Join-Path $target "installer"
-$imageDir = Join-Path $target "app-image"
+$installerDir = Join-Path $root "dist\installer"
+$imageDir = Join-Path $root "dist\app-image"
 
 function Invoke-Native {
     param(
@@ -78,12 +78,13 @@ try {
         "--type" "exe" `
         "--name" $appName `
         "--app-version" $appVersion `
-        "--vendor" "LemonTree" `
+        "--vendor" "JulaByte" `
         "--input" $inputDir `
         "--main-jar" "application-tracker.jar" `
         "--main-class" $mainClass `
         "--dest" $installerDir `
-        "--java-options" "--module-path=`$APPDIR --add-modules=javafx.controls,javafx.graphics" `
+        "--java-options" "--module-path=`$APPDIR" `
+        "--java-options" "--add-modules=javafx.controls,javafx.graphics,javafx.base" `
         "--win-menu" `
         "--win-shortcut"
 
@@ -98,12 +99,13 @@ try {
         "--type" "app-image" `
         "--name" $appName `
         "--app-version" $appVersion `
-        "--vendor" "LemonTree" `
+        "--vendor" "JulaByte" `
         "--input" $inputDir `
         "--main-jar" "application-tracker.jar" `
         "--main-class" $mainClass `
         "--dest" $imageDir `
-        "--java-options" "--module-path=`$APPDIR --add-modules=javafx.controls,javafx.graphics"
+        "--java-options" "--module-path=`$APPDIR" `
+        "--java-options" "--add-modules=javafx.controls,javafx.graphics,javafx.base"
 
     Write-Host "Portable App erzeugt in: $imageDir"
 }
