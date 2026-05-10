@@ -23,6 +23,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
@@ -50,16 +51,22 @@ public final class ApplicationTrackerView extends BorderPane {
     private TableView<JobApplication> applicationTable;
     private VBox detailsForm;
     private Label formTitle;
+    private Label formHint;
     private Button deleteButton;
+    private Button showCompletedButton;
     private JobApplication editedApplication;
+    private boolean showCompletedApplications;
 
     public ApplicationTrackerView(ApplicationService service) {
         this.service = service;
 
         // BorderPane-Aufteilung: Kopf oben, Tabelle in der Mitte, Formular rechts.
         setPadding(new Insets(18));
+        setMinSize(0, 0);
+        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        getStyleClass().add("app-shell");
         setTop(createHeader());
-        setCenter(createTable());
+        setCenter(createContent());
         detailsForm = createForm();
 
         // Direkt beim Start vorhandene Daten aus der Datenbank laden.
@@ -70,37 +77,65 @@ public final class ApplicationTrackerView extends BorderPane {
         // HBox und VBox sind Layout-Container:
         // HBox legt Kinder horizontal, VBox vertikal an.
         Label title = new Label("Bewerbungs-Tracker");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        title.getStyleClass().add("app-title");
 
         Label subtitle = new Label("Lokale JavaFX-App mit SQLite");
-        subtitle.setStyle("-fx-text-fill: #5f6b7a;");
+        subtitle.getStyleClass().add("app-subtitle");
 
         VBox texts = new VBox(3, title, subtitle);
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button newApplicationButton = new Button("Neue Bewerbung");
+        newApplicationButton.getStyleClass().add("primary-button");
         newApplicationButton.setOnAction(event -> startNewApplication());
 
-        HBox header = new HBox(16, texts, spacer, newApplicationButton);
+        showCompletedButton = new Button();
+        showCompletedButton.getStyleClass().add("secondary-button");
+        showCompletedButton.setOnAction(event -> toggleCompletedApplications());
+        updateCompletedButtonText();
+
+        HBox header = new HBox(16, texts, spacer, showCompletedButton, newApplicationButton);
+        header.setMaxWidth(Double.MAX_VALUE);
+        header.getStyleClass().add("app-header");
         header.setPadding(new Insets(0, 0, 14, 0));
         return header;
+    }
+
+    private StackPane createContent() {
+        TableView<JobApplication> table = createTable();
+
+        Label emptyTitle = new Label("Noch keine Bewerbungen");
+        emptyTitle.getStyleClass().add("empty-state-title");
+        Label emptyText = new Label("Lege oben rechts deine erste Bewerbung an.");
+        emptyText.getStyleClass().add("empty-state-text");
+        VBox emptyState = new VBox(8, emptyTitle, emptyText);
+        emptyState.getStyleClass().add("empty-state");
+
+        table.setPlaceholder(emptyState);
+        StackPane content = new StackPane(table);
+        content.setMinSize(0, 0);
+        content.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        return content;
     }
 
     private TableView<JobApplication> createTable() {
         // Die Tabelle zeigt die ObservableList applications an.
         TableView<JobApplication> table = new TableView<>(applications);
         applicationTable = table;
+        table.setMinSize(0, 0);
+        table.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         // Jede Spalte bekommt eine Funktion, die aus JobApplication den passenden Text holt.
         TableColumn<JobApplication, String> companyColumn = column("Firma", JobApplication::company);
         TableColumn<JobApplication, String> positionColumn = column("Position", JobApplication::position);
         TableColumn<JobApplication, String> statusColumn = column("Status", item -> item.status().label());
+        TableColumn<JobApplication, String> appliedOnColumn = column("Beworben am", item -> formatDate(item.appliedOn()));
         TableColumn<JobApplication, String> deadlineColumn = column("Deadline", item -> formatDate(item.nextDeadline()));
         TableColumn<JobApplication, String> contactColumn = column("Kontakt", JobApplication::contactName);
 
-        table.getColumns().addAll(companyColumn, positionColumn, statusColumn, deadlineColumn, contactColumn);
+        table.getColumns().addAll(companyColumn, positionColumn, statusColumn, appliedOnColumn, deadlineColumn, contactColumn);
 
         table.setRowFactory(tv -> {
             TableRow<JobApplication> row = new TableRow<>();
@@ -148,23 +183,34 @@ public final class ApplicationTrackerView extends BorderPane {
 
         Button saveButton = new Button("Speichern");
         saveButton.setMaxWidth(Double.MAX_VALUE);
+        saveButton.getStyleClass().add("primary-button");
         // setOnAction registriert Code, der beim Klick auf den Button ausgefuehrt wird.
         saveButton.setOnAction(event -> saveApplication());
 
         Button clearFormButton = new Button("Zuruecksetzen");
         clearFormButton.setMaxWidth(Double.MAX_VALUE);
+        clearFormButton.getStyleClass().add("secondary-button");
         clearFormButton.setOnAction(event -> clearForm());
 
         deleteButton = new Button("Bewerbung loeschen");
         deleteButton.setMaxWidth(Double.MAX_VALUE);
+        deleteButton.getStyleClass().add("danger-button");
         deleteButton.setOnAction(event -> deleteEditedApplication());
 
         formTitle = new Label("Neue Bewerbung");
-        formTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        formTitle.getStyleClass().add("detail-title");
+        formHint = new Label("Erfasse die wichtigsten Eckdaten und speichere danach den Eintrag.");
+        formHint.setWrapText(true);
+        formHint.getStyleClass().add("detail-hint");
 
-        VBox form = new VBox(12, formTitle, grid, saveButton, clearFormButton, deleteButton);
-        form.setPadding(new Insets(0, 0, 0, 18));
-        form.setPrefWidth(460);
+        HBox actions = new HBox(10, saveButton, clearFormButton);
+        HBox.setHgrow(saveButton, Priority.ALWAYS);
+        HBox.setHgrow(clearFormButton, Priority.ALWAYS);
+
+        VBox form = new VBox(14, formTitle, formHint, grid, actions, deleteButton);
+        form.getStyleClass().add("detail-panel");
+        BorderPane.setMargin(form, new Insets(0, 0, 0, 18));
+        form.setPrefWidth(430);
         return form;
     }
 
@@ -200,13 +246,32 @@ public final class ApplicationTrackerView extends BorderPane {
 
     private void refreshApplications() {
         // setAll ersetzt den aktuellen Tabelleninhalt durch die frisch geladenen Daten.
-        applications.setAll(service.listApplications());
+        if (showCompletedApplications) {
+            applications.setAll(service.listApplications());
+        } else {
+            applications.setAll(service.getOpenApplications());
+        }
+    }
+
+    private void toggleCompletedApplications() {
+        showCompletedApplications = !showCompletedApplications;
+        updateCompletedButtonText();
+        refreshApplications();
+    }
+
+    private void updateCompletedButtonText() {
+        if (showCompletedApplications) {
+            showCompletedButton.setText("Abgeschlossene ausblenden");
+        } else {
+            showCompletedButton.setText("Abgeschlossene anzeigen");
+        }
     }
 
     private void startNewApplication() {
         editedApplication = null;
         applicationTable.getSelectionModel().clearSelection();
         formTitle.setText("Neue Bewerbung");
+        formHint.setText("Erfasse die wichtigsten Eckdaten und speichere danach den Eintrag.");
         deleteButton.setVisible(false);
         deleteButton.setManaged(false);
         clearForm();
@@ -216,6 +281,7 @@ public final class ApplicationTrackerView extends BorderPane {
     private void startEditingApplication(JobApplication application) {
         editedApplication = application;
         formTitle.setText("Bewerbung bearbeiten");
+        formHint.setText(application.company() + " - " + application.position());
         deleteButton.setVisible(true);
         deleteButton.setManaged(true);
         loadApplicationIntoForm(application);
@@ -274,6 +340,7 @@ public final class ApplicationTrackerView extends BorderPane {
 
     private static Label formLabel(String text) {
         Label label = new Label(text);
+        label.getStyleClass().add("form-label");
         label.setMinWidth(FORM_LABEL_WIDTH);
         label.setPrefWidth(FORM_LABEL_WIDTH);
         return label;
